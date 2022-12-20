@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { TextChangesHolder } from './TextChangeHolder';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import { TextChangesHolder } from '../../jslibs/TextChangeHolder';
 
 
-function InputText(props) {
+const InputText = forwardRef((props, ref) => {
+    console.log("Render InputText");
     const tch = new TextChangesHolder();
 
-    const [inputValue, setInputValue] = useState(props.inputTextValue);
+    const [inputValue, setInputValue] = useState('');
     const [oldInputTextValue, setOldInputTextValue] = useState('');
 
     const updateTextReproductor = (tchAdditions, tchDeletions) => {
@@ -33,6 +34,16 @@ function InputText(props) {
         setOldInputTextValue(currentValue);
     }
 
+    const resetInputTextValue = () => {
+        setInputValue('');
+        setOldInputTextValue('');
+        props.textrep.clearClass();
+    }
+
+    useImperativeHandle(ref, () => ({
+        resetInputTextValue: resetInputTextValue
+    }))
+
     return (
         <>
             <input id='inputText' value={inputValue} 
@@ -40,6 +51,6 @@ function InputText(props) {
         </>
         
     );
-}
+});
 
 export { InputText }
